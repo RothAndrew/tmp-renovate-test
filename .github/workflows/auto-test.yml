@@ -1,0 +1,22 @@
+# This triggers an automatic test run if and only if Renovate is the author and the PR was just opened. See ADR #0008.
+name: auto-test
+on:
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+
+defaults:
+  run:
+    # We need -e -o pipefail for consistency with GitHub Actions' default behavior
+    shell: bash -e -o pipefail {0}
+
+jobs:
+  auto-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get_author
+        id: get_author
+        run: |
+          echo "The author is: ${{ github.event.client_payload.github.actor || github.actor }}"
