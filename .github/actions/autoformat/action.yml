@@ -79,7 +79,7 @@ runs:
       shell: bash -e -o pipefail {0}
       run: |
         # Make it always return 0 since changing files is considered a failure by pre-commit
-        make autoformat || true
+        make autoformat fix-cache-permissions || true
 
     - name: Commit and push changes
       uses: stefanzweifel/git-auto-commit-action@v4
