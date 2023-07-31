@@ -14,15 +14,12 @@ defaults:
 
 jobs:
   auto-test:
-    if: github.event.client_payload.github.actor == 'renovate[bot]' || github.actor == 'renovate[bot]'
+#    if: github.event.client_payload.github.actor == 'renovate[bot]' || github.actor == 'renovate[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
+
       - name: Autoformat
         uses: ./.github/actions/autoformat
         with:
@@ -36,7 +33,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ secrets.PAT }}
-          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name || github.repository }}
-          issue-number: ${{ github.event.client_payload.pull_request.number }}
+          repository: ${{ github.repository }}
+          issue-number: ${{ github.event.pull_request.number }}
           body: |
             /test all
