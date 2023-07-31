@@ -1,4 +1,4 @@
-# This triggers an automatic test run if and only if Renovate is the author and the PR was just opened. See ADR #0008.
+# This autoformats using pre-commit, then triggers an automatic test run if and only if Renovate is the author and the PR was just opened. See ADR #0008.
 name: auto-test
 on:
   pull_request:
@@ -21,6 +21,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT }}
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
 
       - name: Autoformat
         uses: ./.github/actions/autoformat
