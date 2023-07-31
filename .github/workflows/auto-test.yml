@@ -17,7 +17,26 @@ jobs:
     if: github.event.client_payload.github.actor == 'renovate[bot]' || github.actor == 'renovate[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: get_author
-        id: get_author
-        run: |
-          echo "The author is: ${{ github.event.client_payload.github.actor || github.actor }}"
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.client_payload.pull_request.head.ref || github.ref_name }}
+      - name: Autoformat
+        uses: ./.github/actions/autoformat
+        with:
+          token: ${{ secrets.PAT }}
+          github-context: "update / autoformat"
+
+      - name: Wait 5 seconds
+        run: sleep 5
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.pull_request.head.repo.full_name || github.repository }}
+          issue-number: ${{ github.event.client_payload.pull_request.number }}
+          body: |
+            /test all

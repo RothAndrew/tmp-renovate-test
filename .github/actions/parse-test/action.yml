@@ -17,12 +17,11 @@ runs:
       id: parse
       env:
         DEBUG: ${{ toJSON(github.event.client_payload.slash_command) }}
-        ARGS_V1: ${{ github.event.client_payload.slash_command.arg1 }}
         ARGS_V2: ${{ github.event.client_payload.slash_command.args.unnamed.all }}
         EVENT_NAME: ${{ github.event_name }}
       shell: bash -e -o pipefail {0}
       run: |
-        ARGS="${ARGS_V1}${ARGS_V2}"
+        ARGS="${ARGS_V2}"
         printf "Event name is %s\n" "$EVENT_NAME"
         printf "Args are %s\n" "$ARGS"
         printf "\n\nslash_command is %s\n\n" "$DEBUG"
